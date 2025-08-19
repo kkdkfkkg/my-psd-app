@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>PSD 레이어 수정 앱</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>PSD 레이어 수정</h2>
+  <form id="layerForm">
+    <div>
+      <label>이름: </label>
+      <input type="text" name="이름" value="홍길동">
+    </div>
+    <div>
+      <label>계좌번호: </label>
+      <input type="text" name="계좌번호" value="123-456-7890">
+    </div>
+    <div>
+      <label>잔액: </label>
+      <input type="text" name="잔액" value="₩1,000,000">
+    </div>
+    <button type="submit">적용하기</button>
+  </form>
+
+  <h3>미리보기</h3>
+  <img id="preview" src="" alt="결과 미리보기" style="max-width:500px; border:1px solid #ccc"/>
+
+  <script>
+    document.getElementById("layerForm").addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const entries = {};
+      formData.forEach((v,k)=> entries[k]=v);
+
+      const res = await fetch("https://내서버.vercel.app/update", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(entries)
+      });
+      const data = await res.json();
+      document.getElementById("preview").src = data.imageUrl + "?t=" + Date.now();
+    });
+  </script>
+</body>
+</html>
